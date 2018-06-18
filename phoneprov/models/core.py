@@ -13,14 +13,14 @@ force_auto_coercion()
 line_type_enum = ENUM(*('sipreg', 'blf', 'sccpreg', 'hotdesk', 'sccpservice','sccpfeature','sccpempty'), name='lineType')
 protocol_enum = ENUM(*('sip', 'sccp'), name='protocol')
 
-class PhoneType( sqla_base, Timestamp ):
+class PhoneType( sqla_base ):
 
     __hash_fields__ = []
 
     __tablename__ = 'phoneprov_types'
-    __table_args__ = (
-        { 'schema': schema_name }
-    )
+#    __table_args__ = (
+#        { 'schema': schema_name }
+#    )
 
     model = Column( 'model', String(45), primary_key=True )
     protocol = Column( protocol_enum, index=True )
@@ -33,17 +33,17 @@ class PhoneType( sqla_base, Timestamp ):
     def template(self):
         return self._template
 
-class Phone( sqla_base, Timestamp ):
+class Phone( sqla_base ):
 
     __hash_fields__ = []
 
     __tablename__ = 'phoneprov_phone'
-    __table_args__ = (
-        { 'schema': schema_name }
-    )
+#    __table_args__ = (
+#        { 'schema': schema_name }
+#    )
 
     mac_address = Column( 'macaddress', String(12), primary_key=True )
-    model_id = Column( 'type', String(45), ForeignKey('public.phoneprov_types.model') )
+    model_id = Column( 'type', String(45), ForeignKey('phoneprov_types.model') )
     _template = Column( 'template', Text )
     phone_label = Column( 'phoneLabel', String(45) )
     softkey_set = Column( 'softKeyset', String(30) )
@@ -61,17 +61,19 @@ class Phone( sqla_base, Timestamp ):
 
         return self._template
 
-class PhoneLine( sqla_base, Timestamp ):
+class PhoneLine( sqla_base ):
 
     __hash_fields__ = []
 
     __tablename__ = 'phoneprov_line'
     __table_args__ = (
         UniqueConstraint('macaddress', 'lineIndex', name='uix_1'),
-        { 'schema': schema_name },
+#        {
+#            'schema': schema_name
+#        },
     )
 
-    mac_address = Column( 'macaddress', String(12), ForeignKey('public.phoneprov_phone.macaddress'), primary_key=True )
+    mac_address = Column( 'macaddress', String(12), ForeignKey('phoneprov_phone.macaddress'), primary_key=True )
     line_index = Column( 'lineIndex', Integer )
     line_type = Column( line_type_enum, index=True )
     sip_identity = Column( 'sipIdentity', String(45), index=True )

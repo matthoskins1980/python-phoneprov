@@ -2,12 +2,16 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-import sqlalchemy.exc
 
+import sqlalchemy.exc
+from .config import Config
+
+c = Config(config_filename="~/.phoneprov/config.json")
+print(c)
 Session = sessionmaker()
 sqla_base = declarative_base()
-schema_name = 'public'
-sqla_url = 'postgresql://asterisk:asterisk@localhost/asterisk_realtime?application_name=phoneprov'
+schema_name = ''
+sqla_url = c.sqla_url
 
 def get_session( echo=False, poolclass=None, *args ):
     if not args:

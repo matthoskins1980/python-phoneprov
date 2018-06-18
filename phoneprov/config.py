@@ -52,7 +52,7 @@ class Config( object ):
             self.load( json )
         elif filename:
             try:
-                with open( filename, "rb" ) as f:
+                with open( expanduser(filename), "rb" ) as f:
                     config_json = f.read()
                 self.load( config_json )
             except IOError as e:
@@ -107,17 +107,17 @@ class Config( object ):
             self.load_defaults()
 
     def get_config_filename(self):
-        if environ.get('APP_CONFIG_FILENAME', None) is not None:
-            return expanduser(environ.get('APP_CONFIG_FILENAME'))
+        if environ.get('PHONEPROV_CONFIG_FILENAME', None) is not None:
+            return environ.get('PHONEPROV_CONFIG_FILENAME')
 
-        return expanduser(environ.get('APP_PATH', ".") + "/config.json")
+        return environ.get('PHONEPROV_PATH', "~/.phoneprov") + "/config.json"
 
     def write(self, filename=None):
         if filename is None:
             filename = self.get_config_filename()
 
         json_config = self.json()
-        with open( filename, "wb" ) as f:
+        with open( expanduser(filename), "wb" ) as f:
             f.write( bytes( json_config.encode('latin-1')) )
 
 if __name__ == '__main__':
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser(description="Phoneprov config reader/writer")
     parser.add_argument( '--init', action='store_true', help="initialize new config file and set to defaults" )
-    parser.add_argument( '--config', default="./config.json", help="config file to read/write to" )
+    parser.add_argument( '--config', default="~/.phoneprov/config.json", help="config file to read/write to [~/.phoneprov/config.json]" )
     parser.add_argument( 'option', nargs='?', help="configuration option to read or write to" )
     parser.add_argument( 'value', nargs='*', help="value to set (multiple values will result in an array")
 
@@ -133,11 +133,10 @@ if __name__ == '__main__':
     config = Config(config_filename=args.config)
 
     if args.option is None:
-        print(args.config)
-        print(config)
         if args.init:
             config.write(filename=args.config)
 
+        print(config)
         exit()
 
     if not args.value:
@@ -150,5 +149,4 @@ if __name__ == '__main__':
         config.set( args.option, args.value )
 
     config.write(filename=args.config)
-    print("Config updated.")
-
+    print(config)

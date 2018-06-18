@@ -16,7 +16,8 @@ setup(name='phoneprov',
         'ldap3',
         'jinja2',
         'requests',
-        'simplejson'
+        'simplejson',
+        'fbtftp'
     ]
 )
 

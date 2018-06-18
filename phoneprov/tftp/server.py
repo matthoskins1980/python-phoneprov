@@ -15,7 +15,7 @@ def print_server_stats(stats):
 class DynamicAndStaticHandler(BaseHandler):
     regexes = [
         {
-            'regex': '^([0-9a-fA-F]{12})\.cnf\.xml',
+            'regex': '^SEP([0-9a-fA-F]{12})\.cnf\.xml',
             'handler': SCCPResponseData
         }
     ]
