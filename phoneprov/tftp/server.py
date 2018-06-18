@@ -11,9 +11,6 @@ def print_session_stats(stats):
 
 def print_server_stats(stats):
     pass
-#    counters = stats.get_and_reset_all_counters()
-#    print('Server stats - every {} seconds'.format(stats.interval))
-#    print(counters)
 
 class DynamicAndStaticHandler(BaseHandler):
     regexes = [
@@ -53,8 +50,19 @@ class DynamicAndStaticServer(BaseServer):
             self._handler_stats_callback, self.config)
 
 def main():
-    server = DynamicAndStaticServer('0.0.0.0', 1069, 3, 5,
-                          '/var/tftproot', print_session_stats,
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(description="Phoneprov TFTP file server")
+    parser.add_argument( 'tftproot', default='/var/tftpboot', help="directory to serve files from [/var/tftpboot]")
+    parser.add_argument( '--host', default='0.0.0.0', help="Address to listen on [0.0.0.0]" )
+    parser.add_argument( '--port', default='69', help="Port to listen on [69]" )
+    parser.add_argument( '--retries', default='3', help="Number of retries before failing connection [3]" )
+    parser.add_argument( '--timeout', default='5', help="Seconds to wait before resending packets [5]" )
+
+    args = parser.parse_args()
+
+    server = DynamicAndStaticServer(args.host, int(args.port), int(args.retries), int(args.timeout),
+                          args.tftproot, print_session_stats,
                           print_server_stats )
     try:
         server.run()
