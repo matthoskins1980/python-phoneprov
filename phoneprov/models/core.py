@@ -25,7 +25,7 @@ class PhoneType( sqla_base ):
     model = Column( 'model', String(45), primary_key=True )
     protocol = Column( protocol_enum, index=True )
     max_lines = Column( 'maxLines', Integer )
-    _template = Column( 'template', Text )
+    _template = Column( 'template_jinja2', Text )
 
     phones = relationship( 'Phone', back_populates='model' )
 
@@ -44,7 +44,7 @@ class Phone( sqla_base ):
 
     mac_address = Column( 'macaddress', String(12), primary_key=True )
     model_id = Column( 'type', String(45), ForeignKey('phoneprov_types.model') )
-    _template = Column( 'template', Text )
+    _template = Column( 'template_jinja2', Text )
     phone_label = Column( 'phoneLabel', String(45) )
     softkey_set = Column( 'softKeyset', String(30) )
     comments = Column( 'comments', Text )
