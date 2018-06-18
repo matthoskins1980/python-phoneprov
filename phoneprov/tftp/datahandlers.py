@@ -4,16 +4,17 @@ from fbtftp.base_handler import ResponseData
 from io import StringIO
 from ..db import get_session
 from ..models import Phone
+from ..config import Config
 
 import os
 import errno
 
 sqla = get_session()
+config = Config()
 
 class SCCPResponseData(ResponseData):
-    def __init__(self, config, mac_address):
+    def __init__(self, mac_address):
         self._mac_address = mac_address
-        self._config = config
         self._template = self.get_template()
 
         if self._template:
@@ -31,7 +32,7 @@ class SCCPResponseData(ResponseData):
             raise FileNotFoundError(
                 errno.ENOENT, os.strerror(errno.ENOENT), self._mac_address)
 
-        t = Environment().from_string( p.template ).render( phone=p, config=self._config )
+        t = Environment().from_string( p.template ).render( phone=p, config=config )
 
         return t
 

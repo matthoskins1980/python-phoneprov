@@ -14,7 +14,7 @@ class Config( object ):
             "prefix": None
         },
         {
-            "name": "directory_url",
+            "name": "cisco_directory_url",
             "description": "url for directory app",
             "type": str,
             "values": "",
@@ -22,9 +22,8 @@ class Config( object ):
             "hidden": True,
             "prefix": None
         },
-
         {
-            "name": "authentication_url",
+            "name": "cisco_authentication_url",
             "description": "url for authentication app",
             "type": str,
             "values": "",
@@ -32,8 +31,15 @@ class Config( object ):
             "hidden": True,
             "prefix": None
         },
-
-
+        {
+            "name": "cisco_services_url",
+            "description": "url for authentication app",
+            "type": str,
+            "values": "",
+            "default": "",
+            "hidden": True,
+            "prefix": None
+        },
     ]
     def __init__( self, *args, **kwargs):
 

@@ -7,7 +7,6 @@ import sqlalchemy.exc
 from .config import Config
 
 c = Config(config_filename="~/.phoneprov/config.json")
-print(c)
 Session = sessionmaker()
 sqla_base = declarative_base()
 schema_name = ''

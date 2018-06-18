@@ -20,9 +20,8 @@ class DynamicAndStaticHandler(BaseHandler):
         }
     ]
 
-    def __init__(self, server_addr, peer, path, options, root, stats_callback, config):
+    def __init__(self, server_addr, peer, path, options, root, stats_callback):
         self._root = root
-        self.config = config
         super().__init__(server_addr, peer, path, options, stats_callback)
 
     def get_response_data(self):
@@ -31,7 +30,7 @@ class DynamicAndStaticHandler(BaseHandler):
 
         for regex in self.regexes:
             m = re.match( regex.get('regex', ''), os.path.basename(self._path) )
-            if m: return regex.get('handler')(self.config, *m.groups())
+            if m: return regex.get('handler')(*m.groups())
 
         raise FileNotFoundError(
             errno.ENOENT, os.strerror(errno.ENOENT), self._path)
@@ -39,7 +38,6 @@ class DynamicAndStaticHandler(BaseHandler):
 class DynamicAndStaticServer(BaseServer):
     def __init__(self, address, port, retries, timeout, root,
                  handler_stats_callback, server_stats_callback=None):
-        self.config = Config()
         self._root = root
         self._handler_stats_callback = handler_stats_callback
         super().__init__(address, port, retries, timeout, server_stats_callback)
@@ -47,7 +45,7 @@ class DynamicAndStaticServer(BaseServer):
     def get_handler(self, server_addr, peer, path, options):
         return DynamicAndStaticHandler(
             server_addr, peer, path, options, self._root,
-            self._handler_stats_callback, self.config)
+            self._handler_stats_callback)
 
 def main():
     from argparse import ArgumentParser
@@ -64,6 +62,7 @@ def main():
     server = DynamicAndStaticServer(args.host, int(args.port), int(args.retries), int(args.timeout),
                           args.tftproot, print_session_stats,
                           print_server_stats )
+
     try:
         server.run()
     except KeyboardInterrupt:
