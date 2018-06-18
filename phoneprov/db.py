@@ -12,11 +12,11 @@ sqla_base = declarative_base()
 schema_name = ''
 sqla_url = c.sqla_url
 
-def get_session( echo=False, poolclass=None, *args ):
+def get_session( *args, echo=False, poolclass=None ):
     if not args:
         _sqla_url = sqla_url
     else:
-        _sqla_url = argv[0]
+        _sqla_url = args[0]
 
     if not poolclass:
         poolclass = QueuePool

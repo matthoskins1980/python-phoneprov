@@ -13,11 +13,13 @@ setup(name='phoneprov',
         'sqlalchemy',
         'sqlalchemy_utils',
         'psycopg2-binary',
+        'mysqlclient',
         'ldap3',
         'jinja2',
         'requests',
         'simplejson',
-        'fbtftp'
+        'fbtftp',
+        'flask'
     ]
 )
 
